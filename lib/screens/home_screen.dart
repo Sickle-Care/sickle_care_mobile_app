@@ -1,12 +1,13 @@
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:sickle_cell_app/models/goal.dart';
 import 'package:sickle_cell_app/screens/single_data_screen.dart';
-import 'package:sickle_cell_app/widgets/goal_Item.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({super.key, required this.firstName});
+
+  final String firstName;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -57,15 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 120,
                           ),
                           Text(
-                            'Hello, Micky!',
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleLarge!
-                                .copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 28,
-                                ),
+                            'Hello, ${widget.firstName}!',
+                            style: GoogleFonts.patrickHand(
+                              textStyle: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 32,
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -230,3 +230,55 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+class GoalItem extends StatelessWidget {
+  const GoalItem(
+      {super.key,
+      required this.color,
+      required this.goal,
+      required this.onTapGoal});
+
+  final Color color;
+  final Goal goal;
+  final void Function() onTapGoal;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTapGoal,
+      child: Container(
+        height: 90,
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.all(Radius.circular(25)),
+        ),
+        margin: EdgeInsets.only(bottom: 16.0),
+        child: ListTile(
+          title: Text(
+            goal.title,
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            "Click to see ${goal.title} goal progress",
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+          trailing: Text(
+            "${goal.goalCompletedPercentage.toStringAsFixed(0)}%",
+            style: Theme.of(context)
+                .textTheme
+                .titleLarge!
+                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
