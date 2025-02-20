@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sickle_cell_app/screens/auth/login_screen.dart';
+import 'package:sickle_cell_app/screens/auth/sign_up_screen.dart';
+import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 import 'package:sickle_cell_app/screens/splash_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
@@ -13,7 +15,7 @@ final theme = ThemeData(
     primary: const Color.fromRGBO(255, 87, 51, 1),
     secondary: const Color.fromARGB(255, 250, 112, 6),
   ),
-  textTheme: GoogleFonts.latoTextTheme(),
+  textTheme: GoogleFonts.robotoTextTheme(),
 );
 
 void main() {
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: theme,
       debugShowCheckedModeBanner: false,
-      home: TabsScreen(),
+      home: SplashScreen(),
     );
   }
 }
