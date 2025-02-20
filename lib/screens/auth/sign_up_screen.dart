@@ -3,8 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/constants/dropdown_values.dart';
+import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/auth/login_screen.dart';
+import 'package:sickle_cell_app/screens/tabs_screen.dart';
+import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
 
@@ -16,17 +21,59 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final ageController = TextEditingController();
+  final contactNumberController = TextEditingController();
+  final emergencyContactNumberController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   String genderValue = gender.first;
   String cellTypeValue = cellType.first;
   final maskFormatter = MaskTextInputFormatter(
     mask: '+1 (###) ###-####',
-    filter: {"#": RegExp(r'[0-9]')}, // Only allow digits
+    filter: {"#": RegExp(r'[0-9]')},
   );
 
-  void signUserUp() async {}
+  void signUserUp() async {
+    try {
+      UserService userService = UserService();
+      var response = await userService.signUp(
+        SignUpRequestModel(
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          age: int.parse(ageController.text),
+          contactNumber: contactNumberController.text,
+          secConNumber: emergencyContactNumberController.text,
+          userType: "patient",
+          sickleCellType: cellTypeValue,
+          gender: genderValue,
+          email: emailController.text,
+          password: passwordController.text,
+        ),
+      );
+
+      if (response.user != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', response.user!.userId);
+        await prefs.setBool('loginSuccess', true);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                TabsScreen(user: response.user), // Pass user here
+          ),
+        );
+      } else {
+        showErrorSnackbar(
+            response.error ?? "Signup failed. Please try again.", context);
+      }
+    } catch (e) {
+      showErrorSnackbar("An error occurred: $e", context);
+    }
+  }
 
   void showErrorMessage(String message) {
-    // Tampilkan dialog dengan pesan error
     showDialog(
         context: context,
         builder: (context) {
@@ -46,6 +93,22 @@ class _SignUpScreenState extends State<SignUpScreen> {
     } else if (!EmailValidator.validate(val, true)) {
       setState(() {
         _errorMessage = "Enter a valid email";
+      });
+    } else {
+      setState(() {
+        _errorMessage = "";
+      });
+    }
+  }
+
+  void validatePassword(String val) {
+    if (val.isEmpty) {
+      setState(() {
+        _errorMessage = "Password cannot be empty";
+      });
+    } else if (val.length < 6) {
+      setState(() {
+        _errorMessage = "Password must be at least 6 characters";
       });
     } else {
       setState(() {
@@ -153,9 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             const SizedBox(height: 10),
                             TextField(
-                              onChanged: (value) {
-                                // signUpController.setAdmissionYear(value);
-                              },
+                              controller: firstNameController,
                               keyboardType: TextInputType.text,
                               cursorColor: HexColor("#4f4f4f"),
                               decoration: InputDecoration(
@@ -184,9 +245,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             const SizedBox(height: 10),
                             TextField(
-                              onChanged: (value) {
-                                // signUpController.setAdmissionYear(value);
-                              },
+                              controller: lastNameController,
                               keyboardType: TextInputType.text,
                               cursorColor: HexColor("#4f4f4f"),
                               decoration: InputDecoration(
@@ -217,9 +276,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 10,
                             ),
                             TextField(
-                              onChanged: (value) {
-                                // signUpController.setAdmissionYear(value);
-                              },
+                              controller: ageController,
                               keyboardType: TextInputType.number,
                               cursorColor: HexColor("#4f4f4f"),
                               decoration: InputDecoration(
@@ -324,9 +381,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 10,
                             ),
                             TextField(
-                              onChanged: (value) {
-                                // signUpController.setAdmissionYear(value);
-                              },
+                              controller: contactNumberController,
                               keyboardType: TextInputType.number,
                               inputFormatters: [maskFormatter],
                               cursorColor: HexColor("#4f4f4f"),
@@ -358,9 +413,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               height: 10,
                             ),
                             TextField(
-                              onChanged: (value) {
-                                // signUpController.setAdmissionYear(value);
-                              },
+                              controller: emergencyContactNumberController,
                               keyboardType: TextInputType.number,
                               inputFormatters: [maskFormatter],
                               cursorColor: HexColor("#4f4f4f"),
@@ -390,8 +443,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             const SizedBox(height: 10),
                             MyTextField(
+                              controller: emailController,
                               onChanged: (() {
-                                // validateEmail(emailController.text);
+                                validateEmail(emailController.text);
                               }),
                               hintText: "hello@email.com",
                               obscureText: false,
@@ -417,6 +471,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             ),
                             const SizedBox(height: 10),
                             MyTextField(
+                              controller: passwordController,
+                              onChanged: (() {
+                                validatePassword(passwordController.text);
+                              }),
                               hintText: "**************",
                               obscureText: true,
                               prefixIcon: const Icon(Icons.lock_outline),

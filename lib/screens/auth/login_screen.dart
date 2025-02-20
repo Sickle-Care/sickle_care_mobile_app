@@ -2,7 +2,12 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/auth/sign_up_screen.dart';
+import 'package:sickle_cell_app/screens/tabs_screen.dart';
+import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
 
@@ -14,11 +19,40 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController textController = TextEditingController();
-  void signUserIn() async {}
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void signUserIn() async {
+    try {
+      UserService userService = UserService();
+      var response = await userService.login(
+        LoginRequestModel(
+          email: emailController.text,
+          password: passwordController.text,
+        ),
+      );
+
+      if (response.user != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', response.user!.userId);
+        await prefs.setBool('loginSuccess', true);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                TabsScreen(user: response.user), // Pass user here
+          ),
+        );
+      } else {
+        showErrorSnackbar(
+            response.error ?? "Login failed. Please try again.", context);
+      }
+    } catch (e) {
+      showErrorSnackbar("An error occurred: $e", context);
+    }
+  }
 
   void showErrorMessage(String message) {
-    // Tampilkan dialog dengan pesan error
     showDialog(
         context: context,
         builder: (context) {
@@ -38,6 +72,22 @@ class _LoginScreenState extends State<LoginScreen> {
     } else if (!EmailValidator.validate(val, true)) {
       setState(() {
         _errorMessage = "Enter a valid email";
+      });
+    } else {
+      setState(() {
+        _errorMessage = "";
+      });
+    }
+  }
+
+  void validatePassword(String val) {
+    if (val.isEmpty) {
+      setState(() {
+        _errorMessage = "Password cannot be empty";
+      });
+    } else if (val.length < 6) {
+      setState(() {
+        _errorMessage = "Password must be at least 6 characters";
       });
     } else {
       setState(() {
@@ -148,9 +198,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         MyTextField(
                           onChanged: (() {
-                            // validateEmail(emailController.text);
+                            validateEmail(emailController.text);
                           }),
-                          // controller: () {},
+                          controller: emailController,
                           hintText: "hello@email.com",
                           obscureText: false,
                           prefixIcon: const Icon(Icons.mail_outline),
@@ -179,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 10,
                         ),
                         MyTextField(
-                          // controller: () {},
+                          controller: passwordController,
                           hintText: "**************",
                           obscureText: true,
                           prefixIcon: const Icon(Icons.lock_outline),
