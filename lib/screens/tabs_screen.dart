@@ -1,36 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/screens/home_screen.dart';
 import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 
 class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key});
+  const TabsScreen({super.key, this.user});
+
+  final User? user;
 
   @override
   State<TabsScreen> createState() => _TabsScreenState();
 }
 
 class _TabsScreenState extends State<TabsScreen> {
+  late User user; // Store user as a state variable
+  int _selectedScreenIndex = 0;
+
   List<IconData> navIcons = [
     Icons.home_outlined,
     Icons.person_outlined,
     Icons.menu,
   ];
 
-  int _selectedScreenIndex = 0;
+  @override
+  void initState() {
+    super.initState();
+    user = widget.user!;
+  }
 
   void _selectScreen(int index) {
     setState(() {
       _selectedScreenIndex = index;
     });
+    print("Updated User in TabsScreen: $user");
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget activeScreen = HomeScreen();
+    Widget activeScreen = HomeScreen(
+      firstName: widget.user!.firstName,
+    );
 
     if (_selectedScreenIndex == 1) {
-      activeScreen = ProfileScreen();
+      activeScreen = ProfileScreen(
+        userDetails: widget.user!,
+      );
     }
     if (_selectedScreenIndex == 2) {
       activeScreen = MoreScreen();

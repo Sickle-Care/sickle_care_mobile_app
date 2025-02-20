@@ -1,27 +1,83 @@
+import 'dart:math';
+
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:sickle_cell_app/constants/dropdown_values.dart';
+import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/resources/snackbar.dart';
+import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
+import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
 
 class EditProfile extends StatefulWidget {
-  const EditProfile({super.key});
+  const EditProfile({super.key, required this.userDetails});
+
+  final User userDetails;
 
   @override
   State<EditProfile> createState() => _EditProfileState();
 }
 
 class _EditProfileState extends State<EditProfile> {
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+  final ageController = TextEditingController();
+  final contactNumberController = TextEditingController();
+  final emergencyContactNumberController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
   String genderValue = gender.first;
   String cellTypeValue = cellType.first;
+  @override
+  void initState() {
+    super.initState();
+    firstNameController.text = widget.userDetails.firstName;
+    lastNameController.text = widget.userDetails.lastName;
+    ageController.text = widget.userDetails.age.toString();
+    contactNumberController.text = widget.userDetails.contactNumber;
+    emergencyContactNumberController.text =
+        widget.userDetails.secConNumber ?? '';
+    // emailController.text = widget.userDetails.email;
+    // passwordController.text = widget.userDetails.password;
+    genderValue = widget.userDetails.gender!;
+    cellTypeValue = widget.userDetails.sickleCellType!;
+  }
+
   final maskFormatter = MaskTextInputFormatter(
     mask: '+1 (###) ###-####',
     filter: {"#": RegExp(r'[0-9]')}, // Only allow digits
   );
 
-  void saveDetails() async {}
+  void saveDetails() async {
+    try {
+      UserService userService = UserService();
+      var response = await userService.updateUserDetails(
+        widget.userDetails.userId,
+        SignUpRequestModel(
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          age: int.parse(ageController.text),
+          contactNumber: contactNumberController.text,
+          secConNumber: emergencyContactNumberController.text,
+          userType: "patient",
+          sickleCellType: cellTypeValue,
+          gender: genderValue,
+          email: widget.userDetails.email,
+        ),
+      );
+
+      if (response != null) {
+        Navigator.of(context).pop(response);
+      } else {
+        showErrorSnackbar("An error occurred. Please try again", context);
+      }
+    } catch (e) {
+      showErrorSnackbar("An error occurred. Please try again.", context);
+    }
+  }
 
   void showErrorMessage(String message) {
     // Tampilkan dialog dengan pesan error
@@ -123,9 +179,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
               const SizedBox(height: 10),
               TextField(
-                onChanged: (value) {
-                  // signUpController.setAdmissionYear(value);
-                },
+                controller: firstNameController,
                 keyboardType: TextInputType.text,
                 cursorColor: HexColor("#4f4f4f"),
                 decoration: InputDecoration(
@@ -153,9 +207,7 @@ class _EditProfileState extends State<EditProfile> {
               ),
               const SizedBox(height: 10),
               TextField(
-                onChanged: (value) {
-                  // signUpController.setAdmissionYear(value);
-                },
+                controller: lastNameController,
                 keyboardType: TextInputType.text,
                 cursorColor: HexColor("#4f4f4f"),
                 decoration: InputDecoration(
@@ -185,9 +237,7 @@ class _EditProfileState extends State<EditProfile> {
                 height: 10,
               ),
               TextField(
-                onChanged: (value) {
-                  // signUpController.setAdmissionYear(value);
-                },
+                controller: ageController,
                 keyboardType: TextInputType.number,
                 cursorColor: HexColor("#4f4f4f"),
                 decoration: InputDecoration(
@@ -289,9 +339,7 @@ class _EditProfileState extends State<EditProfile> {
                 height: 10,
               ),
               TextField(
-                onChanged: (value) {
-                  // signUpController.setAdmissionYear(value);
-                },
+                controller: contactNumberController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [maskFormatter],
                 cursorColor: HexColor("#4f4f4f"),
@@ -322,9 +370,7 @@ class _EditProfileState extends State<EditProfile> {
                 height: 10,
               ),
               TextField(
-                onChanged: (value) {
-                  // signUpController.setAdmissionYear(value);
-                },
+                controller: emergencyContactNumberController,
                 keyboardType: TextInputType.number,
                 inputFormatters: [maskFormatter],
                 cursorColor: HexColor("#4f4f4f"),
@@ -344,46 +390,48 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               const SizedBox(height: 15),
-              Text(
-                "Email",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 15,
-                      color: HexColor("#8d8d8d"),
-                    ),
-              ),
-              const SizedBox(height: 10),
-              MyTextField(
-                onChanged: (() {
-                  // validateEmail(emailController.text);
-                }),
-                hintText: "hello@email.com",
-                obscureText: false,
-                prefixIcon: const Icon(Icons.mail_outline),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                child: Text(
-                  _errorMessage,
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontSize: 12,
-                        color: Colors.red,
-                      ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Password",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 15,
-                      color: HexColor("#8d8d8d"),
-                    ),
-              ),
-              const SizedBox(height: 10),
-              MyTextField(
-                hintText: "**************",
-                obscureText: true,
-                prefixIcon: const Icon(Icons.lock_outline),
-              ),
+              // Text(
+              //   "Email",
+              //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              //         fontSize: 15,
+              //         color: HexColor("#8d8d8d"),
+              //       ),
+              // ),
+              // const SizedBox(height: 10),
+              // MyTextField(
+              //   controller: emailController,
+              //   onChanged: (() {
+              //     validateEmail(emailController.text);
+              //   }),
+              //   hintText: "hello@email.com",
+              //   obscureText: false,
+              //   prefixIcon: const Icon(Icons.mail_outline),
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              //   child: Text(
+              //     _errorMessage,
+              //     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              //           fontSize: 12,
+              //           color: Colors.red,
+              //         ),
+              //   ),
+              // ),
+              // const SizedBox(height: 10),
+              // Text(
+              //   "Password",
+              //   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              //         fontSize: 15,
+              //         color: HexColor("#8d8d8d"),
+              //       ),
+              // ),
+              // const SizedBox(height: 10),
+              // MyTextField(
+              //   controller: passwordController,
+              //   hintText: "**************",
+              //   obscureText: true,
+              //   prefixIcon: const Icon(Icons.lock_outline),
+              // ),
               const SizedBox(height: 30),
               MyButton(
                 onPressed: saveDetails,
