@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sickle_cell_app/resources/snackbar.dart';
+import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
 import 'package:sickle_cell_app/screens/auth/login_screen.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends ConsumerState<SplashScreen> {
   bool isLoggedIn = false;
   String? userId;
 
@@ -35,9 +36,10 @@ class _SplashScreenState extends State<SplashScreen> {
       var user = await userService.getUserDetails(userId);
 
       if (user != null) {
+        ref.read(userProvider.notifier).setUser(user);
         Future.delayed(const Duration(seconds: 3), () {
           Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => TabsScreen(user: user)),
+            MaterialPageRoute(builder: (_) => TabsScreen()),
           );
         });
       } else {

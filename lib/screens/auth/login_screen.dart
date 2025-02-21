@@ -1,9 +1,11 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/auth/sign_up_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
@@ -11,14 +13,14 @@ import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -36,11 +38,11 @@ class _LoginScreenState extends State<LoginScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', response.user!.userId);
         await prefs.setBool('loginSuccess', true);
+        ref.read(userProvider.notifier).setUser(response.user!);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                TabsScreen(user: response.user), // Pass user here
+            builder: (context) => TabsScreen(), // Pass user here
           ),
         );
       } else {

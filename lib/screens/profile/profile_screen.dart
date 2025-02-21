@@ -7,10 +7,10 @@ import 'package:sickle_cell_app/screens/profile/edit_profile_screen.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen(
+  const ProfileScreen(
       {super.key, required this.userDetails});
 
-  User userDetails;
+  final User userDetails;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -26,11 +26,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
 
-    if (updatedUser != null) {
-      setState(() {
-        widget.userDetails = updatedUser;
-      });
-    }
   }
 
   void logout(BuildContext context) async {

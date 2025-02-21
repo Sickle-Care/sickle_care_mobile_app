@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/screens/home_screen.dart';
 import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 
-class TabsScreen extends StatefulWidget {
-  const TabsScreen({super.key, this.user});
-
-  final User? user;
+class TabsScreen extends ConsumerStatefulWidget {
+  const TabsScreen({super.key});
 
   @override
-  State<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreen> createState() => _TabsScreenState();
 }
 
-class _TabsScreenState extends State<TabsScreen> {
-  late User user; // Store user as a state variable
+class _TabsScreenState extends ConsumerState<TabsScreen> {
   int _selectedScreenIndex = 0;
 
   List<IconData> navIcons = [
@@ -23,28 +22,22 @@ class _TabsScreenState extends State<TabsScreen> {
     Icons.menu,
   ];
 
-  @override
-  void initState() {
-    super.initState();
-    user = widget.user!;
-  }
-
   void _selectScreen(int index) {
     setState(() {
       _selectedScreenIndex = index;
     });
-    print("Updated User in TabsScreen: $user");
   }
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(userProvider);
     Widget activeScreen = HomeScreen(
-      firstName: widget.user!.firstName,
+      firstName: user!.firstName,
     );
 
     if (_selectedScreenIndex == 1) {
       activeScreen = ProfileScreen(
-        userDetails: widget.user!,
+        userDetails: user,
       );
     }
     if (_selectedScreenIndex == 2) {

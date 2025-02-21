@@ -2,26 +2,26 @@ import 'dart:math';
 
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:sickle_cell_app/constants/dropdown_values.dart';
 import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
-import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
-import 'package:sickle_cell_app/widgets/my_text_field.dart';
 
-class EditProfile extends StatefulWidget {
+class EditProfile extends ConsumerStatefulWidget {
   const EditProfile({super.key, required this.userDetails});
 
   final User userDetails;
 
   @override
-  State<EditProfile> createState() => _EditProfileState();
+  ConsumerState<EditProfile> createState() => _EditProfileState();
 }
 
-class _EditProfileState extends State<EditProfile> {
+class _EditProfileState extends ConsumerState<EditProfile> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final ageController = TextEditingController();
@@ -48,7 +48,7 @@ class _EditProfileState extends State<EditProfile> {
 
   final maskFormatter = MaskTextInputFormatter(
     mask: '+1 (###) ###-####',
-    filter: {"#": RegExp(r'[0-9]')}, // Only allow digits
+    filter: {"#": RegExp(r'[0-9]')}, 
   );
 
   void saveDetails() async {
@@ -68,8 +68,8 @@ class _EditProfileState extends State<EditProfile> {
           email: widget.userDetails.email,
         ),
       );
-
       if (response != null) {
+        ref.read(userProvider.notifier).setUser(response);
         Navigator.of(context).pop(response);
       } else {
         showErrorSnackbar("An error occurred. Please try again", context);
@@ -80,7 +80,6 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   void showErrorMessage(String message) {
-    // Tampilkan dialog dengan pesan error
     showDialog(
         context: context,
         builder: (context) {

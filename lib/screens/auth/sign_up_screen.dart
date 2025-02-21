@@ -1,11 +1,13 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/constants/dropdown_values.dart';
 import 'package:sickle_cell_app/models/user.dart';
+import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/auth/login_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
@@ -13,14 +15,14 @@ import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
 
   @override
-  State<SignUpScreen> createState() => _SignUpScreenState();
+  ConsumerState<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final ageController = TextEditingController();
@@ -57,11 +59,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', response.user!.userId);
         await prefs.setBool('loginSuccess', true);
+        ref.read(userProvider.notifier).setUser(response.user!);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                TabsScreen(user: response.user), // Pass user here
+            builder: (context) => TabsScreen(), // Pass user here
           ),
         );
       } else {
