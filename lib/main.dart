@@ -6,6 +6,7 @@ import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 import 'package:sickle_cell_app/screens/splash_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final theme = ThemeData(
   useMaterial3: true,
@@ -19,7 +20,11 @@ final theme = ThemeData(
 );
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
