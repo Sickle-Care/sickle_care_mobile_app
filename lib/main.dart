@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sickle_cell_app/screens/auth/login_screen.dart';
-import 'package:sickle_cell_app/screens/auth/sign_up_screen.dart';
-import 'package:sickle_cell_app/screens/more_screen.dart';
-import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 import 'package:sickle_cell_app/screens/splash_screen.dart';
-import 'package:sickle_cell_app/screens/tabs_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final theme = ThemeData(
