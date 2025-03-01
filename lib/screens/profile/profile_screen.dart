@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/models/user.dart';
-import 'package:sickle_cell_app/screens/auth/login_screen.dart';
+import 'package:sickle_cell_app/screens/auth_screens/login_screen.dart';
 import 'package:sickle_cell_app/screens/profile/edit_profile_screen.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 

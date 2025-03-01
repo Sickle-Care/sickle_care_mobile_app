@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
-import 'package:sickle_cell_app/screens/auth/login_screen.dart';
+import 'package:sickle_cell_app/screens/auth_screens/login_screen.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
