@@ -9,8 +9,8 @@ import 'package:sickle_cell_app/constants/dropdown_values.dart';
 import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
-import 'package:sickle_cell_app/screens/auth/login_screen.dart';
-import 'package:sickle_cell_app/screens/tabs_screen.dart';
+import 'package:sickle_cell_app/screens/add_medicine_screens/add_medicine_screen.dart';
+import 'package:sickle_cell_app/screens/auth_screens/login_screen.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
@@ -63,7 +63,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TabsScreen(), // Pass user here
+            builder: (context) => AddMedicineScreen(
+              user: response.user!,
+            ), // Pass user here
           ),
         );
       } else {

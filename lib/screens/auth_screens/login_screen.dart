@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
-import 'package:sickle_cell_app/screens/auth/sign_up_screen.dart';
+import 'package:sickle_cell_app/screens/auth_screens/sign_up_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screen.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
@@ -45,6 +45,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             builder: (context) => TabsScreen(), // Pass user here
           ),
         );
+      } else if (response.error != null) {
+        showErrorSnackbar("Invalid credentials. Please try again. ", context);
       } else {
         showErrorSnackbar(
             response.error ?? "Login failed. Please try again.", context);
