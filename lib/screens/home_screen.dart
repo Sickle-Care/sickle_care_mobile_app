@@ -1,24 +1,71 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sickle_cell_app/models/goal.dart';
-import 'package:sickle_cell_app/screens/single_data_screen.dart';
+import 'package:sickle_cell_app/screens/data_screens/diet_data_screen.dart';
+import 'package:sickle_cell_app/screens/data_screens/medicine_data_screen.dart';
+import 'package:sickle_cell_app/screens/data_screens/sleep_data_screen.dart';
+import 'package:sickle_cell_app/screens/data_screens/water_data_screen.dart';
+import 'package:sickle_cell_app/screens/data_screens/alcohol_data_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.firstName});
 
   final String firstName;
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
 
-  void _selectType(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (ctx) => SingleDataScreen()));
+  void _selectType(BuildContext context, String goalType) {
+    if (goalType == 'Water') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => WaterDataScreen(
+            selectedDate: _selectedDate,
+          ),
+        ),
+      );
+    }
+    if (goalType == 'Alcohol') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => AlcoholDataScreen(
+            selectedDate: _selectedDate,
+          ),
+        ),
+      );
+    }
+    if (goalType == 'Sleep') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => SleepDataScreen(
+            selectedDate: _selectedDate,
+          ),
+        ),
+      );
+    }
+    if (goalType == 'Medicine') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => MedicineDataScreen(
+            selectedDate: _selectedDate,
+          ),
+        ),
+      );
+    }
+    if (goalType == 'Diet') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => DietDataScreen(
+            selectedDate: _selectedDate,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -156,62 +203,42 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         GoalItem(
                           color: const Color.fromARGB(255, 135, 206, 235),
-                          goal: Goal(
-                              id: "1",
-                              title: "Water",
-                              goal: 2,
-                              goalCompleted: 1,
-                              goalCompletedPercentage: 50),
+                          title: "Water",
+                          icon: Icons.water_drop,
                           onTapGoal: () {
-                            _selectType(context);
+                            _selectType(context, "Water");
                           },
                         ),
                         GoalItem(
                           color: const Color.fromARGB(255, 162, 209, 73),
-                          goal: Goal(
-                              id: "2",
-                              title: "Diet",
-                              goal: 2,
-                              goalCompleted: 1,
-                              goalCompletedPercentage: 50),
+                          title: "Diet",
+                          icon: Icons.set_meal_outlined,
                           onTapGoal: () {
-                            _selectType(context);
+                            _selectType(context, "Diet");
                           },
                         ),
                         GoalItem(
                           color: const Color.fromARGB(255, 44, 62, 80),
-                          goal: Goal(
-                              id: "3",
-                              title: "Sleep",
-                              goal: 2,
-                              goalCompleted: 1,
-                              goalCompletedPercentage: 50),
+                          title: "Sleep",
+                          icon: Icons.bed,
                           onTapGoal: () {
-                            _selectType(context);
+                            _selectType(context, "Sleep");
                           },
                         ),
                         GoalItem(
                           color: const Color.fromARGB(255, 203, 170, 203),
-                          goal: Goal(
-                              id: "4",
-                              title: "Medicine",
-                              goal: 2,
-                              goalCompleted: 1,
-                              goalCompletedPercentage: 50),
+                          title: "Medicine",
+                          icon: Icons.medication,
                           onTapGoal: () {
-                            _selectType(context);
+                            _selectType(context, "Medicine");
                           },
                         ),
                         GoalItem(
                           color: const Color.fromARGB(255, 178, 58, 72),
-                          goal: Goal(
-                              id: "5",
-                              title: "Alcohol",
-                              goal: 2,
-                              goalCompleted: 1,
-                              goalCompletedPercentage: 50),
+                          title: "Alcohol",
+                          icon: Icons.wine_bar,
                           onTapGoal: () {
-                            _selectType(context);
+                            _selectType(context, "Alcohol");
                           },
                         ),
                         SizedBox(
@@ -234,12 +261,14 @@ class _HomeScreenState extends State<HomeScreen> {
 class GoalItem extends StatelessWidget {
   const GoalItem(
       {super.key,
+      required this.title,
+      required this.icon,
       required this.color,
-      required this.goal,
       required this.onTapGoal});
 
+  final String title;
+  final IconData icon;
   final Color color;
-  final Goal goal;
   final void Function() onTapGoal;
 
   @override
@@ -247,38 +276,40 @@ class GoalItem extends StatelessWidget {
     return InkWell(
       onTap: onTapGoal,
       child: Container(
-        height: 90,
-        padding: EdgeInsets.all(15),
+        height: 100,
+        padding: EdgeInsets.fromLTRB(5, 12, 5, 10),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
         margin: EdgeInsets.only(bottom: 16.0),
         child: ListTile(
+          leading: Icon(
+            icon,
+            color: Colors.white,
+            size: 30,
+          ),
           title: Text(
-            goal.title,
+            title,
             style: Theme.of(context)
                 .textTheme
                 .titleLarge!
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           subtitle: Text(
-            "Click to see ${goal.title} goal progress",
+            "Click to see $title goal progress",
             style: Theme.of(context)
                 .textTheme
                 .bodySmall!
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          trailing: Text(
-            "${goal.goalCompletedPercentage.toStringAsFixed(0)}%",
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          trailing: Icon(
+            Icons.arrow_circle_right_outlined,
+            color: Colors.white,
+            size: 30,
           ),
         ),
       ),
     );
   }
 }
-
