@@ -8,3 +8,12 @@ void showErrorSnackbar(String errorMessage, BuildContext context) {
     ),
   );
 }
+
+void showSuccessSnackbar(String errorMessage, BuildContext context) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(errorMessage),
+      backgroundColor: const Color.fromARGB(255, 0, 200, 83),
+    ),
+  );
+}
