@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/models/medicine.dart';
 import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/add_medicine_screens/add_medicine_modal.dart';
-import 'package:sickle_cell_app/screens/tabs_screen.dart';
+import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen.dart';
 import 'package:sickle_cell_app/services/medicine_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 
@@ -70,8 +71,7 @@ class _AddMedicineScreenState extends State<AddMedicineScreen> {
 
   void submitMedicines() async {
     try {
-      MedicineService medicineService = MedicineService();
-      var response = await medicineService.createMedicineData(MedicineData(
+      MedicineData medicineData = MedicineData(
         userId: widget.user.userId,
         patientId: widget.user.patientId!,
         medicines: MedicineSchedule(
@@ -79,13 +79,18 @@ class _AddMedicineScreenState extends State<AddMedicineScreen> {
           day: dayMedicines,
           night: nightMedicines,
         ),
-      ));
+      );
+      print(medicineData.toJson());
+      MedicineService medicineService = MedicineService();
+      var response = await medicineService.createMedicineData(medicineData);
 
       if (response != null) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('medicineId', response.medicineId!);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => TabsScreen(), // Pass user here
+            builder: (context) => TabsScreen(),
           ),
         );
       } else {
@@ -307,7 +312,11 @@ class _AddMedicineScreenState extends State<AddMedicineScreen> {
                   width: width,
                   height: 20,
                 ),
-                MyButton(onPressed: () {}, buttonText: "Submit Medicines"),
+                MyButton(
+                    onPressed: () {
+                      submitMedicines();
+                    },
+                    buttonText: "Submit Medicines"),
                 SizedBox(
                   width: width,
                   height: 10,
