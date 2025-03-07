@@ -2,11 +2,16 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sickle_cell_app/screens/data_screens/diet_data_screen.dart';
-import 'package:sickle_cell_app/screens/data_screens/medicine_data_screen.dart';
-import 'package:sickle_cell_app/screens/data_screens/sleep_data_screen.dart';
-import 'package:sickle_cell_app/screens/data_screens/water_data_screen.dart';
-import 'package:sickle_cell_app/screens/data_screens/alcohol_data_screen.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sickle_cell_app/providers/healthRecord_provider.dart';
+import 'package:sickle_cell_app/resources/snackbar.dart';
+import 'package:sickle_cell_app/screens/patient_screens/data_screens/diet_data_screen.dart';
+import 'package:sickle_cell_app/screens/patient_screens/data_screens/medicine_data_screen.dart';
+import 'package:sickle_cell_app/screens/patient_screens/data_screens/sleep_data_screen.dart';
+import 'package:sickle_cell_app/screens/patient_screens/data_screens/water_data_screen.dart';
+import 'package:sickle_cell_app/screens/patient_screens/data_screens/alcohol_data_screen.dart';
+import 'package:sickle_cell_app/services/healthrecord_service.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key, required this.firstName});
@@ -19,6 +24,30 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    super.initState();
+    _getHealthDetails();
+  }
+
+  void _getHealthDetails() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userId = prefs.getString('userId');
+    String formattedDate = DateFormat('yyyy-MM-dd').format(_selectedDate);
+    try {
+      HealthrecordService userService = HealthrecordService();
+      var response = await userService.getHealthDetails(userId!, formattedDate);
+      if (response != null) {
+        ref.read(healthRecordProvider.notifier).setRecord(response);
+        print("healthrecord details ${response.toJson()}");
+      } else {
+        showErrorSnackbar("No health record found", context);
+      }
+    } catch (e) {
+      showErrorSnackbar("No health record found", context);
+    }
+  }
 
   void _selectType(BuildContext context, String goalType) {
     if (goalType == 'Water') {
@@ -304,9 +333,9 @@ class GoalItem extends StatelessWidget {
                 .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           trailing: Icon(
-            Icons.arrow_circle_right_outlined,
+            Icons.arrow_forward_ios,
             color: Colors.white,
-            size: 30,
+            size: 24,
           ),
         ),
       ),

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
-import 'package:sickle_cell_app/screens/home_screen.dart';
+import 'package:sickle_cell_app/screens/home_screens/home_screen_doctor.dart';
 import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 
-class TabsScreen extends ConsumerStatefulWidget {
-  const TabsScreen({super.key});
+class TabsScreenDoctor extends ConsumerStatefulWidget {
+  const TabsScreenDoctor({super.key});
 
   @override
-  ConsumerState<TabsScreen> createState() => _TabsScreenState();
+  ConsumerState<TabsScreenDoctor> createState() => _TabsScreenDoctorState();
 }
 
-class _TabsScreenState extends ConsumerState<TabsScreen> {
+class _TabsScreenDoctorState extends ConsumerState<TabsScreenDoctor> {
   int _selectedScreenIndex = 0;
+  String? userId;
 
   List<IconData> navIcons = [
     Icons.home_outlined,
@@ -31,7 +31,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
-    Widget activeScreen = HomeScreen(
+    Widget activeScreen = HomeScreenDoctor(
       firstName: user!.firstName,
     );
 
