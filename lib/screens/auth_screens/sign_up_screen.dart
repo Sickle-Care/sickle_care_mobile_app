@@ -47,7 +47,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
           age: int.parse(ageController.text),
           contactNumber: contactNumberController.text,
           secConNumber: emergencyContactNumberController.text,
-          userType: "patient",
+          userType: "Patient",
           sickleCellType: cellTypeValue,
           gender: genderValue,
           email: emailController.text,
@@ -59,6 +59,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userId', response.user!.userId);
         await prefs.setBool('loginSuccess', true);
+        await prefs.setString('userType', response.user!.userType);
         ref.read(userProvider.notifier).setUser(response.user!);
         Navigator.pushReplacement(
           context,

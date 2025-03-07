@@ -7,8 +7,7 @@ import 'package:sickle_cell_app/screens/profile/edit_profile_screen.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen(
-      {super.key, required this.userDetails});
+  const ProfileScreen({super.key, required this.userDetails});
 
   final User userDetails;
 
@@ -18,14 +17,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   void navigateToUpdatePage(BuildContext context) async {
-    final updatedUser = await Navigator.of(context).push(
+    await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => EditProfile(
           userDetails: widget.userDetails,
         ),
       ),
     );
-
   }
 
   void logout(BuildContext context) async {
@@ -97,11 +95,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 const SizedBox(
                   height: 10,
                 ),
-                ProfileItem(
-                  title: 'Sickle Cell Type',
-                  data: widget.userDetails.sickleCellType,
-                  icon: Icons.medical_information,
-                ),
+                if (widget.userDetails.userType == 'Patient')
+                  ProfileItem(
+                    title: 'Sickle Cell Type',
+                    data: widget.userDetails.sickleCellType,
+                    icon: Icons.medical_information,
+                  ),
                 ProfileItem(
                   title: 'Age',
                   data: widget.userDetails.age.toString(),

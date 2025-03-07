@@ -8,7 +8,8 @@ import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/auth_screens/sign_up_screen.dart';
-import 'package:sickle_cell_app/screens/tabs_screen.dart';
+import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen.dart';
+import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen_doctor.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
@@ -36,15 +37,28 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       if (response.user != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userType', response.user!.userType);
         await prefs.setString('userId', response.user!.userId);
         await prefs.setBool('loginSuccess', true);
         ref.read(userProvider.notifier).setUser(response.user!);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => TabsScreen(), // Pass user here
-          ),
-        );
+
+        if (response.user!.userType == 'Patient') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TabsScreen(), // Pass user here
+            ),
+          );
+        } else if (response.user!.userType == 'Doctor') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => TabsScreenDoctor(), // Pass user here
+            ),
+          );
+        } else {
+          showErrorSnackbar("Invalid credentials. Please try again. ", context);
+        }
       } else if (response.error != null) {
         showErrorSnackbar("Invalid credentials. Please try again. ", context);
       } else {

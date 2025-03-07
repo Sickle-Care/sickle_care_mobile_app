@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -89,9 +87,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         });
   }
 
-  String _errorMessage = "";
-
   void validateEmail(String val) {
+    String _errorMessage = "";
     if (val.isEmpty) {
       setState(() {
         _errorMessage = "Email cannot be empty";
@@ -291,41 +288,43 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                 }).toList(),
               ),
               const SizedBox(height: 10),
-              Text(
-                "Sickle Cell Type",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 16,
-                      color: HexColor("#8d8d8d"),
-                    ),
-              ),
-              DropdownButton<String>(
-                value: cellTypeValue,
-                icon: const Icon(Icons.arrow_drop_down),
-                elevation: 16,
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontSize: 15,
-                      color: HexColor("#8d8d8d"),
-                    ),
-                isExpanded: true,
-                underline: Container(
-                  height: 2,
-                  color: HexColor("#ffffff"),
+              if (widget.userDetails.userType == "patient") ...[
+                Text(
+                  "Sickle Cell Type",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 16,
+                        color: HexColor("#8d8d8d"),
+                      ),
                 ),
-                iconSize: 30,
-                borderRadius: BorderRadius.circular(20),
-                onChanged: (String? value) {
-                  setState(() {
-                    cellTypeValue = value!;
-                    // signUpController.setUserType(value);
-                  });
-                },
-                items: cellType.map<DropdownMenuItem<String>>((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
+                DropdownButton<String>(
+                  value: cellTypeValue,
+                  icon: const Icon(Icons.arrow_drop_down),
+                  elevation: 16,
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 15,
+                        color: HexColor("#8d8d8d"),
+                      ),
+                  isExpanded: true,
+                  underline: Container(
+                    height: 2,
+                    color: HexColor("#ffffff"),
+                  ),
+                  iconSize: 30,
+                  borderRadius: BorderRadius.circular(20),
+                  onChanged: (String? value) {
+                    setState(() {
+                      cellTypeValue = value!;
+                      // signUpController.setUserType(value);
+                    });
+                  },
+                  items: cellType.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
+              ],
               const SizedBox(height: 10),
               Text(
                 "Contact Number",
