@@ -101,4 +101,27 @@ class UserService {
       throw Exception("Failed to load data! Error: $e");
     }
   }
+
+  Future<List<User>> getAllAdmins() async {
+    final Uri url = Uri.parse('$baseUrl/findall/admins');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = jsonDecode(response.body);
+        return data.map((json) => User.fromJson(json)).toList();
+      } else if (response.statusCode == 400) {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData["error"] ?? "Admin data not found");
+      } else {
+        throw Exception("Unexpected error: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Failed to load data! Error: $e");
+    }
+  }
 }
