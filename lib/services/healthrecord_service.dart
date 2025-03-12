@@ -17,8 +17,9 @@ class HealthrecordService {
         headers: {"Content-Type": "application/json"},
       );
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         final data = jsonDecode(response.body);
+        print(response.body);
         return HealthRecord.fromJson(data);
       } else if (response.statusCode == 400) {
         final errorData = jsonDecode(response.body);
@@ -62,7 +63,56 @@ class HealthrecordService {
       final data = jsonDecode(response.body);
       return HealthRecord.fromJson(data);
     } else {
-      throw Exception('Failed to update water intake');
+      throw Exception('Failed to update alchohol consumption');
+    }
+  }
+
+  Future<HealthRecord> updateSleep(Sleep sleep, String recordId) async {
+    final Uri url = Uri.parse('$baseUrl/patch/sleep?recordId=$recordId');
+    final response = await http.patch(
+      url,
+      body: jsonEncode(sleep.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return HealthRecord.fromJson(data);
+    } else {
+      throw Exception('Failed to update sleep');
+    }
+  }
+
+  Future<HealthRecord> updateDiet(Diet diet, String recordId) async {
+    final Uri url = Uri.parse('$baseUrl/patch/diet?recordId=$recordId');
+    final response = await http.patch(
+      url,
+      body: jsonEncode(diet.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return HealthRecord.fromJson(data);
+    } else {
+      throw Exception('Failed to update sleep');
+    }
+  }
+
+  Future<HealthRecord> updateMedicine(
+      Medicine medicine, String recordId) async {
+    final Uri url = Uri.parse('$baseUrl/patch/medicine?recordId=$recordId');
+    final response = await http.patch(
+      url,
+      body: jsonEncode(medicine.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return HealthRecord.fromJson(data);
+    } else {
+      throw Exception('Failed to update sleep');
     }
   }
 }

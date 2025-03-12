@@ -36,7 +36,7 @@ class _AlcoholDataScreenState extends ConsumerState<AlcoholDataScreen> {
     try {
       AlcoholConsumption updatedAlchoholConsumption = healthRecord
           .alcoholConsumption!
-          .copyWith(shotCount: _selectedGlasses, canCount: _totalGlasses);
+          .copyWith(shotCount: _selectedGlasses);
       HealthrecordService healthRecordService = HealthrecordService();
       var response = await healthRecordService.updateAlchoholIntake(
           updatedAlchoholConsumption, healthRecord.recordId);
@@ -81,9 +81,9 @@ class _AlcoholDataScreenState extends ConsumerState<AlcoholDataScreen> {
                   radius: 100,
                   lineWidth: 13,
                   animation: true,
-                  percent: healthRecord!.alcoholPercentage,
+                  percent: healthRecord!.alcoholPercentage / 100,
                   center: Text(
-                    healthRecord.alcoholPercentage.toStringAsFixed(0),
+                    "${healthRecord.alcoholPercentage.toStringAsFixed(0)} %",
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                   circularStrokeCap: CircularStrokeCap.round,

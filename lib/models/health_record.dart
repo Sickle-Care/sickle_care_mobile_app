@@ -2,9 +2,9 @@ class HealthRecord {
   final String recordId;
   final String patientId;
   final String userId;
-  final String? date;
-  final WaterIntake waterIntake;
-  final Diet diet;
+  final String date;
+  final WaterIntake? waterIntake;
+  final Diet? diet;
   final AlcoholConsumption? alcoholConsumption;
   final Sleep? sleep;
   final Medicine medicine;
@@ -20,9 +20,9 @@ class HealthRecord {
     required this.recordId,
     required this.patientId,
     required this.userId,
-    this.date,
-    required this.waterIntake,
-    required this.diet,
+    required this.date,
+    this.waterIntake,
+    this.diet,
     this.alcoholConsumption,
     this.sleep,
     required this.medicine,
@@ -41,19 +41,18 @@ class HealthRecord {
       patientId: json['patientId'],
       userId: json['userId'],
       date: json['date'],
-      waterIntake: WaterIntake.fromJson(json['waterIntake'] ?? {}),
-      diet: Diet.fromJson(json['diet'] ?? {}),
-      alcoholConsumption: json['alcoholConsumption'] != null
-          ? AlcoholConsumption.fromJson(json['alcoholConsumption'])
-          : null,
-      sleep: json['sleep'] != null ? Sleep.fromJson(json['sleep']) : null,
-      medicine: Medicine.fromJson(json['medicine'] ?? {}),
-      waterIntakePercentage: (json['waterIntakePercentage'] ?? 0).toDouble(),
-      dietPercentage: (json['dietPercentage'] ?? 0).toDouble(),
-      alcoholPercentage: (json['alcoholPercentage'] ?? 0).toDouble(),
-      sleepPercentage: (json['sleepPercentage'] ?? 0).toDouble(),
-      medicinePercentage: (json['medicinePercentage'] ?? 0).toDouble(),
-      notes: json['notes'],
+      waterIntake: WaterIntake.fromJson(json['waterIntake']),
+      diet: Diet.fromJson(json['diet']),
+      alcoholConsumption:
+          AlcoholConsumption.fromJson(json['alcoholConsumption']),
+      sleep: Sleep.fromJson(json['sleep']),
+      medicine: Medicine.fromJson(json['medicine']),
+      waterIntakePercentage: json['waterIntakePercentage']?.toDouble() ?? 0.0,
+      dietPercentage: json['dietPercentage']?.toDouble() ?? 0.0,
+      alcoholPercentage: json['alcoholPercentage']?.toDouble() ?? 0.0,
+      sleepPercentage: json['sleepPercentage']?.toDouble() ?? 0.0,
+      medicinePercentage: json['medicinePercentage']?.toDouble() ?? 0.0,
+      notes: json['notes'] ?? '',
       isDeleted: json['isDeleted'] ?? false,
     );
   }
@@ -64,10 +63,10 @@ class HealthRecord {
       'patientId': patientId,
       'userId': userId,
       'date': date,
-      'waterIntake': waterIntake.toJson(),
-      'diet': diet.toJson(),
-      'alcoholConsumption': alcoholConsumption?.toJson(),
-      'sleep': sleep?.toJson(),
+      'waterIntake': waterIntake!.toJson(),
+      'diet': diet!.toJson(),
+      'alcoholConsumption': alcoholConsumption!.toJson(),
+      'sleep': sleep!.toJson(),
       'medicine': medicine.toJson(),
       'waterIntakePercentage': waterIntakePercentage,
       'dietPercentage': dietPercentage,
@@ -84,7 +83,10 @@ class WaterIntake {
   final int glassAmount;
   final int glassCount;
 
-  WaterIntake({this.glassAmount = 0, this.glassCount = 0});
+  WaterIntake({
+    required this.glassAmount,
+    required this.glassCount,
+  });
 
   factory WaterIntake.fromJson(Map<String, dynamic> json) {
     return WaterIntake(
@@ -112,42 +114,36 @@ class WaterIntake {
 }
 
 class Diet {
-  final Map<String, List<String>> breakfast;
-  final Map<String, List<String>> lunch;
-  final Map<String, List<String>> dinner;
+  final Meal breakfast;
+  final Meal lunch;
+  final Meal dinner;
 
   Diet({
-    this.breakfast = const {},
-    this.lunch = const {},
-    this.dinner = const {},
+    required this.breakfast,
+    required this.lunch,
+    required this.dinner,
   });
 
   factory Diet.fromJson(Map<String, dynamic> json) {
     return Diet(
-      breakfast: (json['breakfast']?['nutrition'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(key, List<String>.from(value))) ??
-          {},
-      lunch: (json['lunch']?['nutrition'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(key, List<String>.from(value))) ??
-          {},
-      dinner: (json['dinner']?['nutrition'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(key, List<String>.from(value))) ??
-          {},
+      breakfast: Meal.fromJson(json['breakfast']),
+      lunch: Meal.fromJson(json['lunch']),
+      dinner: Meal.fromJson(json['dinner']),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'breakfast': {'nutrition': breakfast},
-      'lunch': {'nutrition': lunch},
-      'dinner': {'nutrition': dinner},
+      'breakfast': breakfast.toJson(),
+      'lunch': lunch.toJson(),
+      'dinner': dinner.toJson(),
     };
   }
 
   Diet copyWith({
-    Map<String, List<String>>? breakfast,
-    Map<String, List<String>>? lunch,
-    Map<String, List<String>>? dinner,
+    Meal? breakfast,
+    Meal? lunch,
+    Meal? dinner,
   }) {
     return Diet(
       breakfast: breakfast ?? this.breakfast,
@@ -157,92 +153,136 @@ class Diet {
   }
 }
 
-class Medicine {
-  final List<MedicineItem> morning;
-  final List<MedicineItem> day;
-  final List<MedicineItem> night;
+class Meal {
+  final String? iron;
+  final String? folateVitaminB9;
+  final String? vitaminB12;
+  final String? vitaminC;
+  final String? zinc;
+  final String? magnesium;
+  final String? omega3FattyAcids;
+  final String? protein;
+  final String? calciumVitaminD;
+  final String? hydrationFluids;
 
-  Medicine({
-    this.morning = const [],
-    this.day = const [],
-    this.night = const [],
+  Meal({
+    this.iron,
+    this.folateVitaminB9,
+    this.vitaminB12,
+    this.vitaminC,
+    this.zinc,
+    this.magnesium,
+    this.omega3FattyAcids,
+    this.protein,
+    this.calciumVitaminD,
+    this.hydrationFluids,
   });
 
-  factory Medicine.fromJson(Map<String, dynamic> json) {
-    return Medicine(
-      morning: (json['morning'] as List<dynamic>?)
-              ?.map((e) => MedicineItem.fromJson(e))
-              .toList() ??
-          [],
-      day: (json['day'] as List<dynamic>?)
-              ?.map((e) => MedicineItem.fromJson(e))
-              .toList() ??
-          [],
-      night: (json['night'] as List<dynamic>?)
-              ?.map((e) => MedicineItem.fromJson(e))
-              .toList() ??
-          [],
+  factory Meal.fromJson(Map<String, dynamic> json) {
+    return Meal(
+      iron: json['Iron'],
+      folateVitaminB9: json['Folate_VitaminB9'],
+      vitaminB12: json['VitaminB12'],
+      vitaminC: json['VitaminC'],
+      zinc: json['Zinc'],
+      magnesium: json['Magnesium'],
+      omega3FattyAcids: json['Omega_3FattyAcids'],
+      protein: json['Protein'],
+      calciumVitaminD: json['Calcium_VitaminD'],
+      hydrationFluids: json['Hydration_Fluids'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'morning': morning.map((e) => e.toJson()).toList(),
-      'day': day.map((e) => e.toJson()).toList(),
-      'night': night.map((e) => e.toJson()).toList(),
+      'Iron': iron,
+      'Folate_VitaminB9': folateVitaminB9,
+      'VitaminB12': vitaminB12,
+      'VitaminC': vitaminC,
+      'Zinc': zinc,
+      'Magnesium': magnesium,
+      'Omega_3FattyAcids': omega3FattyAcids,
+      'Protein': protein,
+      'Calcium_VitaminD': calciumVitaminD,
+      'Hydration_Fluids': hydrationFluids,
     };
   }
 
-  Medicine copyWith({
-    List<MedicineItem>? morning,
-    List<MedicineItem>? day,
-    List<MedicineItem>? night,
+  Meal copyWith({
+    String? iron,
+    String? folateVitaminB9,
+    String? vitaminB12,
+    String? vitaminC,
+    String? zinc,
+    String? magnesium,
+    String? omega3FattyAcids,
+    String? protein,
+    String? calciumVitaminD,
+    String? hydrationFluids,
   }) {
-    return Medicine(
-      morning: morning ?? this.morning,
-      day: day ?? this.day,
-      night: night ?? this.night,
+    return Meal(
+      iron: iron ?? this.iron,
+      folateVitaminB9: folateVitaminB9 ?? this.folateVitaminB9,
+      vitaminB12: vitaminB12 ?? this.vitaminB12,
+      vitaminC: vitaminC ?? this.vitaminC,
+      zinc: zinc ?? this.zinc,
+      magnesium: magnesium ?? this.magnesium,
+      omega3FattyAcids: omega3FattyAcids ?? this.omega3FattyAcids,
+      protein: protein ?? this.protein,
+      calciumVitaminD: calciumVitaminD ?? this.calciumVitaminD,
+      hydrationFluids: hydrationFluids ?? this.hydrationFluids,
     );
   }
 }
 
-class MedicineItem {
-  final String name;
-  final bool isTaken;
+class AlcoholConsumption {
+  final int shotCount;
 
-  MedicineItem({required this.name, required this.isTaken});
+  AlcoholConsumption({
+    required this.shotCount,
+  });
 
-  factory MedicineItem.fromJson(Map<String, dynamic> json) {
-    return MedicineItem(
-      name: json['name'] ?? '',
-      isTaken: json['isTaken'] ?? false,
+  factory AlcoholConsumption.fromJson(Map<String, dynamic> json) {
+    return AlcoholConsumption(
+      shotCount: json['shotCount'] ?? 0,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'name': name,
-      'isTaken': isTaken,
+      'shotCount': shotCount,
     };
+  }
+
+  AlcoholConsumption copyWith({
+    int? shotCount,
+  }) {
+    return AlcoholConsumption(
+      shotCount: shotCount ?? this.shotCount,
+    );
   }
 }
 
 class Sleep {
-  final int? hours;
-  final String? quality;
+  final int hours;
+  final String quality;
 
-  Sleep({this.hours, this.quality});
+  Sleep({
+    required this.hours,
+    required this.quality,
+  });
 
   factory Sleep.fromJson(Map<String, dynamic> json) {
     return Sleep(
-      hours: json['hours'],
-      quality: json['quality'],
+      hours: json['hours'] ?? 0,
+      quality: json['quality'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'hours': hours,
+      'quality': quality,
     };
   }
 
@@ -257,36 +297,85 @@ class Sleep {
   }
 }
 
-class AlcoholConsumption {
-  final int shotCount;
-  final int canCount;
+class Medicine {
+  final List<MedicineDose> morning;
+  final List<MedicineDose> day;
+  final List<MedicineDose> night;
 
-  AlcoholConsumption({
-    this.shotCount = 0,
-    this.canCount = 0,
+  Medicine({
+    required this.morning,
+    required this.day,
+    required this.night,
   });
 
-  factory AlcoholConsumption.fromJson(Map<String, dynamic> json) {
-    return AlcoholConsumption(
-      shotCount: json['shotCount'] ?? 0,
-      canCount: json['canCount'] ?? 0,
+  factory Medicine.fromJson(Map<String, dynamic> json) {
+    return Medicine(
+      morning: (json['morning'] as List<dynamic>?)
+              ?.map((e) => MedicineDose.fromJson(e))
+              .toList() ??
+          [],
+      day: (json['day'] as List<dynamic>?)
+              ?.map((e) => MedicineDose.fromJson(e))
+              .toList() ??
+          [],
+      night: (json['night'] as List<dynamic>?)
+              ?.map((e) => MedicineDose.fromJson(e))
+              .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'shotCount': shotCount,
-      'canCount': canCount,
+      'morning': morning.map((e) => e.toJson()).toList(),
+      'day': day.map((e) => e.toJson()).toList(),
+      'night': night.map((e) => e.toJson()).toList(),
     };
   }
 
-  AlcoholConsumption copyWith({
-    int? shotCount,
-    int? canCount,
+  Medicine copyWith({
+    List<MedicineDose>? morning,
+    List<MedicineDose>? day,
+    List<MedicineDose>? night,
   }) {
-    return AlcoholConsumption(
-      shotCount: shotCount ?? this.shotCount,
-      canCount: canCount ?? this.canCount,
+    return Medicine(
+      morning: morning ?? this.morning,
+      day: day ?? this.day,
+      night: night ?? this.night,
+    );
+  }
+}
+
+class MedicineDose {
+  final String name;
+  final bool isTaken;
+
+  MedicineDose({
+    required this.name,
+    required this.isTaken,
+  });
+
+  factory MedicineDose.fromJson(Map<String, dynamic> json) {
+    return MedicineDose(
+      name: json['name'],
+      isTaken: json['isTaken'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'isTaken': isTaken,
+    };
+  }
+
+  MedicineDose copyWith({
+    String? name,
+    bool? isTaken,
+  }) {
+    return MedicineDose(
+      name: name ?? this.name,
+      isTaken: isTaken ?? this.isTaken,
     );
   }
 }

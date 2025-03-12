@@ -10,43 +10,45 @@ import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/services/healthrecord_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 
-class WaterDataScreen extends ConsumerStatefulWidget {
-  const WaterDataScreen({super.key, required this.selectedDate});
+class SleepDataScreen extends ConsumerStatefulWidget {
+  const SleepDataScreen({super.key, required this.selectedDate});
 
   final DateTime selectedDate;
 
   @override
-  ConsumerState<WaterDataScreen> createState() => _WaterDataScreenState();
+  ConsumerState<SleepDataScreen> createState() => _SleepDataScreenState();
 }
 
-class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
-  int _selectedGlasses = 0;
-  final int _totalGlasses = 7;
+class _SleepDataScreenState extends ConsumerState<SleepDataScreen> {
+  final sleepQualityController = TextEditingController();
+  int _selectedHours = 0;
+  final int _totalHours = 8;
 
   @override
   void initState() {
     super.initState();
     final healthRecord = ref.read(healthRecordProvider);
     if (healthRecord != null) {
-      _selectedGlasses = healthRecord.waterIntake!.glassCount;
+      _selectedHours = healthRecord.sleep!.hours;
+      sleepQualityController.text = healthRecord.sleep!.quality;
     }
   }
 
   void updateWaterIntake(HealthRecord healthRecord) async {
     try {
-      WaterIntake updatedWaterIntake = healthRecord.waterIntake!
-          .copyWith(glassAmount: 500, glassCount: _selectedGlasses);
+      Sleep updatedSleep = healthRecord.sleep!.copyWith(
+          hours: _selectedHours, quality: sleepQualityController.text);
       HealthrecordService healthRecordService = HealthrecordService();
-      var response = await healthRecordService.updateWaterIntake(
-          updatedWaterIntake, healthRecord.recordId);
+      var response = await healthRecordService.updateSleep(
+          updatedSleep, healthRecord.recordId);
       if (response.recordId != null) {
         ref.read(healthRecordProvider.notifier).setRecord(response);
-        showSuccessSnackbar("Successfully updated water intake", context);
+        showSuccessSnackbar("Successfully updated sleep", context);
       } else {
-        showErrorSnackbar("Failed to update water intake", context);
+        showErrorSnackbar("Failed to update sleep", context);
       }
     } catch (e) {
-      showErrorSnackbar("Failed to update water intake", context);
+      showErrorSnackbar("Failed to update sleep", context);
     }
   }
 
@@ -58,7 +60,7 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: Text("WATER GOAL DETAILS"),
+        title: Text("SLEEP GOAL DETAILS"),
         backgroundColor: Theme.of(context).colorScheme.primary,
         titleTextStyle: Theme.of(context)
             .textTheme
@@ -79,13 +81,13 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
                   radius: 100,
                   lineWidth: 13,
                   animation: true,
-                  percent: healthRecord!.waterIntakePercentage / 100,
+                  percent: healthRecord!.sleepPercentage / 100,
                   center: Text(
-                    "${healthRecord.waterIntakePercentage.toStringAsFixed(0)} %",
+                    "${healthRecord.sleepPercentage.toStringAsFixed(0)} %",
                     style: Theme.of(context).textTheme.displayLarge,
                   ),
                   circularStrokeCap: CircularStrokeCap.round,
-                  progressColor: const Color.fromARGB(255, 135, 206, 235),
+                  progressColor: const Color.fromARGB(255, 44, 62, 80),
                 ),
               ),
               SizedBox(
@@ -102,7 +104,7 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
                 height: 40,
               ),
               Text(
-                'Update Your Water Intake Here',
+                'Update Your Sleep Hours Here',
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: Theme.of(context).colorScheme.primary,
                     fontWeight: FontWeight.bold),
@@ -110,32 +112,11 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
               SizedBox(
                 height: 20,
               ),
-              Wrap(
-                spacing: 1,
-                children: List<Widget>.generate(
-                  _totalGlasses,
-                  (int index) {
-                    // If the index is less than the selected number, show filled glass
-                    // Otherwise, show empty glass
-                    return Image.asset(
-                      index < _selectedGlasses
-                          ? 'assets/images/filled_glass.png'
-                          : 'assets/images/empty_glass.png',
-                      width: 50,
-                      height: 100,
-                    );
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
               Text(
-                '1 glass represents 500ml',
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyLarge!
-                    .copyWith(color: Colors.blueGrey),
+                '$_selectedHours Hours',
+                style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold),
               ),
               SizedBox(
                 height: 20,
@@ -143,7 +124,7 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
               SizedBox(
                 width: width * 0.5,
                 child: DropdownButton<int>(
-                  value: _selectedGlasses,
+                  value: _selectedHours,
                   icon: const Icon(Icons.arrow_drop_down),
                   elevation: 16,
                   style: GoogleFonts.poppins(
@@ -159,15 +140,41 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
                   borderRadius: BorderRadius.circular(20),
                   onChanged: (int? newValue) {
                     setState(() {
-                      _selectedGlasses = newValue!;
+                      _selectedHours = newValue!;
                     });
+                    // _updateUserSleepIntake(newValue!);
                   },
                   items: List<DropdownMenuItem<int>>.generate(
-                    _totalGlasses + 1, // Options from 0 to 10
+                    _totalHours + 1,
                     (int index) => DropdownMenuItem<int>(
                       value: index,
-                      child: Text('$index glasses'),
+                      child: Text('$index Hours'),
                     ),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: width * 0.6,
+                child: TextField(
+                  controller: sleepQualityController,
+                  keyboardType: TextInputType.text,
+                  cursorColor: HexColor("#4f4f4f"),
+                  decoration: InputDecoration(
+                    hintText: "Refreshed, Tired, etc",
+                    fillColor: HexColor("#f0f3f1"),
+                    contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 15,
+                          color: HexColor("#8d8d8d"),
+                        ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
                   ),
                 ),
               ),
