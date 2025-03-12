@@ -1,74 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sickle_cell_app/screens/doctor_screens/patient_request_list_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/medicine_data_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/sleep_data_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/water_data_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/alcohol_data_screen.dart';
-import 'package:sickle_cell_app/screens/doctor_screens/patient_list_screen.dart';
-import 'package:sickle_cell_app/screens/doctor_screens/session_list_screen.dart';
+import 'package:sickle_cell_app/screens/admin_screens/admin_list_screen.dart';
+import 'package:sickle_cell_app/screens/admin_screens/doctor_list_screen.dart';
+import 'package:sickle_cell_app/screens/admin_screens/patient_list_screen.dart';
+import 'package:sickle_cell_app/screens/patient_screens/blog_list_screen.dart';
 
-class HomeScreenDoctor extends ConsumerStatefulWidget {
-  const HomeScreenDoctor({super.key, required this.firstName});
-
-  final String firstName;
-
+class HomeScreenAdmin extends ConsumerStatefulWidget {
+  const HomeScreenAdmin({super.key});
   @override
-  ConsumerState<HomeScreenDoctor> createState() => _HomeScreenDoctorState();
+  ConsumerState<HomeScreenAdmin> createState() => _HomeScreenAdminState();
 }
 
-class _HomeScreenDoctorState extends ConsumerState<HomeScreenDoctor> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _getHealthDetails();
-  // }
-
-  // void _getHealthDetails() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? userId = prefs.getString('userId');
-  //   String formattedDate =
-  //       "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
-  //   try {
-  //     HealthrecordService userService = HealthrecordService();
-  //     var response = await userService.getHealthDetails(userId!, formattedDate);
-  //     print("healthrecord details $response");
-  //     if (response != null) {
-  //       ref.read(healthRecordProvider.notifier).setRecord(response);
-  //       print("healthrecord details $response");
-  //     }
-  //   } catch (e) {
-  //     showErrorSnackbar("An error occurred: $e", context);
-  //   }
-  // }
-
+class _HomeScreenAdminState extends ConsumerState<HomeScreenAdmin> {
   void _selectType(BuildContext context, String goalType) {
     if (goalType == 'Patients') {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) => PatientListScreen(),
+          builder: (ctx) => PatientListScreenAdmin(),
         ),
       );
     }
-    if (goalType == 'Sessions') {
+    if (goalType == 'Doctors') {
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (ctx) => SessionListScreen()),
+        MaterialPageRoute(builder: (ctx) => DoctorListScreenAdmin()),
       );
     }
-    //   if (goalType == 'Sleep') {
-    //     Navigator.of(context).push(
-    //       MaterialPageRoute(
-    //         builder: (ctx) => SleepDataScreen(
-    //           selectedDate: _selectedDate,
-    //         ),
-    //       ),
-    //     );
-    //   }
-    if (goalType == 'Requests') {
+    if (goalType == 'Admins') {
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) => PatientRequestListScreen(),
+          builder: (ctx) => AdminListScreen(),
+        ),
+      );
+    }
+    if (goalType == 'Blogs') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => BlogListScreen(),
         ),
       );
     }
@@ -107,7 +75,7 @@ class _HomeScreenDoctorState extends ConsumerState<HomeScreenDoctor> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Welcome Back, Dr.${widget.firstName}!',
+                            'Welcome Back, Admin!',
                             style: GoogleFonts.patrickHand(
                               textStyle: TextStyle(
                                 color: Colors.white,
@@ -175,24 +143,24 @@ class _HomeScreenDoctorState extends ConsumerState<HomeScreenDoctor> {
                           },
                         ),
                         GoalItem(
-                          title: "Sessions",
-                          icon: Icons.calendar_month,
+                          title: "Doctors",
+                          icon: Icons.medical_services,
                           onTapGoal: () {
-                            _selectType(context, "Sessions");
+                            _selectType(context, "Doctors");
                           },
                         ),
                         GoalItem(
-                          title: "Chat",
-                          icon: Icons.chat,
+                          title: "Admins",
+                          icon: Icons.admin_panel_settings,
                           onTapGoal: () {
-                            // _selectType(context, "Sleep");
+                            _selectType(context, "Admins");
                           },
                         ),
                         GoalItem(
-                          title: "Patient Requests",
-                          icon: Icons.person_add,
+                          title: "Blogs Corner",
+                          icon: Icons.my_library_books,
                           onTapGoal: () {
-                            _selectType(context, "Requests");
+                            _selectType(context, "Blogs");
                           },
                         ),
                         SizedBox(

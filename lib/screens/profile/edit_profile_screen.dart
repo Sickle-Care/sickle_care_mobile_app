@@ -27,6 +27,7 @@ class _EditProfileState extends ConsumerState<EditProfile> {
   final emergencyContactNumberController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final doctorLicenseNumberController = TextEditingController();
   String genderValue = gender.first;
   String cellTypeValue = cellType.first;
   @override
@@ -40,13 +41,15 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         widget.userDetails.secConNumber ?? '';
     // emailController.text = widget.userDetails.email;
     // passwordController.text = widget.userDetails.password;
+    doctorLicenseNumberController.text =
+        widget.userDetails.doctorLicenseNumber ?? '';
     genderValue = widget.userDetails.gender!;
     cellTypeValue = widget.userDetails.sickleCellType!;
   }
 
   final maskFormatter = MaskTextInputFormatter(
     mask: '+1 (###) ###-####',
-    filter: {"#": RegExp(r'[0-9]')}, 
+    filter: {"#": RegExp(r'[0-9]')},
   );
 
   void saveDetails() async {
@@ -60,10 +63,11 @@ class _EditProfileState extends ConsumerState<EditProfile> {
           age: int.parse(ageController.text),
           contactNumber: contactNumberController.text,
           secConNumber: emergencyContactNumberController.text,
-          userType: "patient",
+          userType: widget.userDetails.userType,
           sickleCellType: cellTypeValue,
           gender: genderValue,
           email: widget.userDetails.email,
+          doctorLicenseNumber: doctorLicenseNumberController.text,
         ),
       );
       if (response != null) {
@@ -87,8 +91,9 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         });
   }
 
+  String _errorMessage = "";
+
   void validateEmail(String val) {
-    String _errorMessage = "";
     if (val.isEmpty) {
       setState(() {
         _errorMessage = "Email cannot be empty";
@@ -287,8 +292,8 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   );
                 }).toList(),
               ),
-              const SizedBox(height: 10),
-              if (widget.userDetails.userType == "patient") ...[
+              const SizedBox(height: 20),
+              if (widget.userDetails.userType == "Patient") ...[
                 Text(
                   "Sickle Cell Type",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -325,7 +330,38 @@ class _EditProfileState extends ConsumerState<EditProfile> {
                   }).toList(),
                 ),
               ],
-              const SizedBox(height: 10),
+              if (widget.userDetails.userType == "Doctor") ...[
+                Text(
+                  "License Number",
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontSize: 16,
+                        color: HexColor("#8d8d8d"),
+                      ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextField(
+                  controller: doctorLicenseNumberController,
+                  keyboardType: TextInputType.name,
+                  cursorColor: HexColor("#4f4f4f"),
+                  decoration: InputDecoration(
+                    hintText: "1278B243",
+                    fillColor: HexColor("#f0f3f1"),
+                    contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                    hintStyle: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                          fontSize: 15,
+                          color: HexColor("#8d8d8d"),
+                        ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                  ),
+                ),
+              ],
+              const SizedBox(height: 15),
               Text(
                 "Contact Number",
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(

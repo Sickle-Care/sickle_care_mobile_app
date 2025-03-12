@@ -116,6 +116,7 @@ class SignUpRequestModel {
   final int? age;
   final String? gender;
   final String? password;
+  final String? doctorLicenseNumber;
 
   SignUpRequestModel({
     required this.firstName,
@@ -128,6 +129,7 @@ class SignUpRequestModel {
     required this.age,
     required this.gender,
     this.password,
+    this.doctorLicenseNumber,
   });
 
   factory SignUpRequestModel.fromJson(Map<String, dynamic> json) {
@@ -142,6 +144,7 @@ class SignUpRequestModel {
       age: json["age"] != null ? json["age"] as int : null,
       gender: json["gender"],
       password: json["password"],
+      doctorLicenseNumber: json["doctorLicenseNumber"],
     );
   }
 
@@ -157,6 +160,7 @@ class SignUpRequestModel {
       "age": age,
       "gender": gender,
       "password": password,
+      "doctorLicenseNumber": doctorLicenseNumber,
     };
   }
 }

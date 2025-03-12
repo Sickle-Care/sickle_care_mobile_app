@@ -10,6 +10,7 @@ import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/screens/add_medicine_screens/add_medicine_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen.dart';
 import 'package:sickle_cell_app/screens/auth_screens/login_screen.dart';
+import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen_admin.dart';
 import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen_doctor.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 
@@ -83,6 +84,31 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
           Future.delayed(const Duration(seconds: 3), () {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => TabsScreenDoctor()),
+            );
+          });
+        } else {
+          await prefs.clear();
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            );
+          });
+        }
+      } catch (e) {
+        Future.delayed(const Duration(seconds: 3), () {
+          _showDialog();
+        });
+      }
+    } else if (loginSuccess && userId != null && userType == 'Admin') {
+      try {
+        UserService userService = UserService();
+        var user = await userService.getUserDetails(userId);
+
+        if (user != null) {
+          ref.read(userProvider.notifier).setUser(user);
+          Future.delayed(const Duration(seconds: 3), () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => TabsScreenAdmin()),
             );
           });
         } else {

@@ -23,7 +23,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now().toUtc();
 
   @override
   void initState() {
