@@ -30,4 +30,28 @@ class MedicineService {
       throw Exception("Failed to submit the data! Error: $e");
     }
   }
+
+  Future<MedicineData?> getMedicalDetails(String userId) async {
+    final Uri url = Uri.parse('$baseUrl/userId?userId=$userId');
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {"Content-Type": "application/json"},
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        print(response.body);
+        return MedicineData.fromJson(data);
+      } else if (response.statusCode == 400) {
+        final errorData = jsonDecode(response.body);
+        throw Exception(errorData["error"] ?? "Medicine data not found");
+      } else {
+        throw Exception("Unexpected error: ${response.statusCode}");
+      }
+    } catch (e) {
+      throw Exception("Failed to load data! Error: $e");
+    }
+  }
 }
