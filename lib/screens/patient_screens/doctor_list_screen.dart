@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sickle_cell_app/constants/async_handler.dart';
+import 'package:sickle_cell_app/resources/async_handler.dart';
 import 'package:sickle_cell_app/models/doctor_request.dart';
 import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/providers/doctor_provider.dart';
@@ -91,7 +91,7 @@ class _DoctorListScreenState extends ConsumerState<DoctorListScreen> {
                             print("onChanged");
                           },
                         ),
-                        SizedBox(height: 20),
+                        SizedBox(height: 5),
                       ],
                     ),
                   ),

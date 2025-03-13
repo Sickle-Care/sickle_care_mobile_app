@@ -15,6 +15,17 @@ class DoctorNotifier extends StateNotifier<AsyncValue<List<User>>> {
       state = AsyncValue.error(e, stackTrace); // Set state to error
     }
   }
+
+  Future<void> fetchAvailableDoctorSByPatientId(String patientId) async {
+    try {
+      state = const AsyncValue.loading(); // Set state to loading
+      DoctorService doctorService = DoctorService();
+      final doctors = await doctorService.getAvailableDoctorSByPatientId(patientId);
+      state = AsyncValue.data(doctors); // Set state to data
+    } catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace); // Set state to error
+    }
+  }
 }
 
 final doctorProvider =
