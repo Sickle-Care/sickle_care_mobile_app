@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,108 +49,36 @@ class _AddBlogScreenState extends ConsumerState<AddBlogScreen> {
     final subtitleController = TextEditingController();
     final contentController = TextEditingController();
 
-    if (Platform.isIOS) {
-      showCupertinoDialog(
-        context: context,
-        builder: (ctx) => CupertinoAlertDialog(
-          title: const Text("Add Sub Section"),
-          content: SizedBox(
-            width: MediaQuery.of(context).size.width *
-                0.8, // Set width to 80% of screen width
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const SizedBox(height: 30),
-                Material(
-                  color: Colors.transparent,
-                  child: TextField(
-                    controller: subtitleController,
-                    keyboardType: TextInputType.text,
-                    cursorColor: HexColor("#4f4f4f"),
-                    decoration: InputDecoration(
-                      hintText: "Sub title",
-                      fillColor: HexColor("#ffffff"),
-                      contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      hintStyle:
-                          Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                fontSize: 15,
-                                color: HexColor("#8d8d8d"),
-                              ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Material(
-                  color: Colors.transparent,
-                  child: TextField(
-                    controller: contentController,
-                    cursorColor: HexColor("#4f4f4f"),
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      hintText: "Content",
-                      fillColor: HexColor("#ffffff"),
-                      contentPadding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-                      hintStyle:
-                          Theme.of(context).textTheme.bodyMedium!.copyWith(
-                                fontSize: 15,
-                                color: HexColor("#8d8d8d"),
-                              ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                    ),
-                    maxLines: 3,
-                  ),
-                ),
-                const SizedBox(height: 30),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                if (subtitleController.text.isNotEmpty &&
-                    contentController.text.isNotEmpty) {
-                  setState(() {
-                    _sections.add(BlogSection(
-                      subtitle: subtitleController.text,
-                      content: contentController.text,
-                    ));
-                  });
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text("Add"),
-            ),
-          ],
-        ),
-      );
-    } else {
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            backgroundColor: HexColor("#ffffff"),
-            title: const Text("Add Section"),
-            content: SizedBox(
-              width: MediaQuery.of(context).size.width *
-                  0.8, // Set width to 80% of screen width
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          initialChildSize: 0.8,
+          maxChildSize: 0.8,
+          minChildSize: 0.5,
+          expand: false,
+          builder: (context, scrollController) {
+            return Container(
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
+              ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  const SizedBox(height: 16),
+                  Text(
+                    "Add Sub Section",
+                    style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                          color: HexColor("#4f4f4f"),
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: subtitleController,
                     keyboardType: TextInputType.text,
@@ -172,7 +99,7 @@ class _AddBlogScreenState extends ConsumerState<AddBlogScreen> {
                       filled: true,
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 16),
                   TextField(
                     controller: contentController,
                     cursorColor: HexColor("#4f4f4f"),
@@ -193,37 +120,30 @@ class _AddBlogScreenState extends ConsumerState<AddBlogScreen> {
                       filled: true,
                     ),
                     maxLines: 3,
+                  ),
+                  const SizedBox(height: 16),
+                  MyButton(
+                    onPressed: () {
+                      if (subtitleController.text.isNotEmpty &&
+                          contentController.text.isNotEmpty) {
+                        setState(() {
+                          _sections.add(BlogSection(
+                            subtitle: subtitleController.text,
+                            content: contentController.text,
+                          ));
+                        });
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    buttonText: "Add",
                   ),
                 ],
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancel"),
-              ),
-              TextButton(
-                onPressed: () {
-                  if (subtitleController.text.isNotEmpty &&
-                      contentController.text.isNotEmpty) {
-                    setState(() {
-                      _sections.add(BlogSection(
-                        subtitle: subtitleController.text,
-                        content: contentController.text,
-                      ));
-                    });
-                    Navigator.of(context).pop();
-                  }
-                },
-                child: const Text("Add"),
-              ),
-            ],
-          );
-        },
-      );
-    }
+            );
+          },
+        );
+      },
+    );
   }
 
   void _saveBlog() async {
