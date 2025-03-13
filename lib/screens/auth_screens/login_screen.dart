@@ -7,10 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sickle_cell_app/models/user.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
+import 'package:sickle_cell_app/screens/add_medicine_screens/add_medicine_screen.dart';
 import 'package:sickle_cell_app/screens/auth_screens/sign_up_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen.dart';
 import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen_admin.dart';
 import 'package:sickle_cell_app/screens/tabs_screens/tabs_screen_doctor.dart';
+import 'package:sickle_cell_app/services/medicine_service.dart';
 import 'package:sickle_cell_app/services/user_service.dart';
 import 'package:sickle_cell_app/widgets/button.dart';
 import 'package:sickle_cell_app/widgets/my_text_field.dart';
@@ -44,12 +46,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         ref.read(userProvider.notifier).setUser(response.user!);
 
         if (response.user!.userType == 'Patient') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => TabsScreen(), // Pass user here
-            ),
-          );
+          MedicineService medicineService = MedicineService();
+          var medicineData =
+              await medicineService.getMedicalDetails(response.user!.userId);
+          if (medicineData != null) {
+            await prefs.setString('medicineId', medicineData.medicineId!);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => TabsScreen(), // Pass user here
+              ),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    AddMedicineScreen(user: response.user!), // Pass user here
+              ),
+            );
+          }
         } else if (response.user!.userType == 'Doctor') {
           Navigator.pushReplacement(
             context,
