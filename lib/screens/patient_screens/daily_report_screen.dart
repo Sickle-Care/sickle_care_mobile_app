@@ -148,7 +148,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
+                          Flexible(
                             child: Text("Water Intake Summary",
                                 style: Theme.of(context)
                                     .textTheme
@@ -157,13 +157,13 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold)),
                           ),
-                          Expanded(
+                          Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Taken amount: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -172,7 +172,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.waterIntake?.taken ?? "0"} ml",
                                           style: Theme.of(context)
@@ -188,7 +188,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Recommended Amount: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -197,7 +197,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.waterIntake?.recommended ?? "0"} ml",
                                           style: Theme.of(context)
@@ -213,7 +213,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Percentage: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -222,7 +222,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.waterIntake?.percentage ?? "0"} %",
                                           style: Theme.of(context)
@@ -247,7 +247,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
+                          Flexible(
                             child: Text("Diet Summary",
                                 style: Theme.of(context)
                                     .textTheme
@@ -256,13 +256,13 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold)),
                           ),
-                          Expanded(
+                          Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Eaten: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -271,7 +271,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.diet?.eaten ?? "None"}",
                                           style: Theme.of(context)
@@ -287,7 +287,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Recommended: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -296,7 +296,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.diet?.recommended ?? "None"}",
                                           style: Theme.of(context)
@@ -312,7 +312,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Percentage: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -321,7 +321,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.diet?.percentage ?? "0"} %",
                                           style: Theme.of(context)
@@ -346,7 +346,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
+                          Flexible(
                             child: Text("Sleep Summary",
                                 style: Theme.of(context)
                                     .textTheme
@@ -355,13 +355,13 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold)),
                           ),
-                          Expanded(
+                          Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Slept Hours: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -370,7 +370,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.sleep?.slept ?? "0"}",
                                           style: Theme.of(context)
@@ -386,7 +386,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Recommended Hours: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -395,7 +395,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.sleep?.recommended ?? "0"}",
                                           style: Theme.of(context)
@@ -411,7 +411,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Percentage: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -420,7 +420,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.sleep?.percentage ?? "0"} %",
                                           style: Theme.of(context)
@@ -445,7 +445,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
+                          Flexible(
                             child: Text("Alchohol Consumption Summary",
                                 style: Theme.of(context)
                                     .textTheme
@@ -454,13 +454,13 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold)),
                           ),
-                          Expanded(
+                          Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Taken Shots: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -469,7 +469,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.alcoholConsumption?.shotsTaken ?? "0"}",
                                           style: Theme.of(context)
@@ -485,7 +485,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Recommended Shots: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -494,7 +494,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.alcoholConsumption?.recommendedShots ?? "0"}",
                                           style: Theme.of(context)
@@ -510,7 +510,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Percentage: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -519,7 +519,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.alcoholConsumption?.percentage ?? "0"} %",
                                           style: Theme.of(context)
@@ -544,7 +544,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Expanded(
+                          Flexible(
                             child: Text("Medicine Summary",
                                 style: Theme.of(context)
                                     .textTheme
@@ -553,13 +553,13 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                         color: Colors.black,
                                         fontWeight: FontWeight.bold)),
                           ),
-                          Expanded(
+                          Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Not taken medicine: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -568,7 +568,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.medicine?.notTaken ?? "None"}",
                                           style: Theme.of(context)
@@ -584,7 +584,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    Expanded(
+                                    Flexible(
                                       child: Text("Percentage: ",
                                           style: Theme.of(context)
                                               .textTheme
@@ -593,7 +593,7 @@ class _DailyReportScreenState extends ConsumerState<DailyReportScreen> {
                                                   color: Colors.black,
                                                   fontWeight: FontWeight.bold)),
                                     ),
-                                    Expanded(
+                                    Flexible(
                                       child: Text(
                                           "${report?.medicine?.percentage ?? "0"} %",
                                           style: Theme.of(context)
