@@ -16,6 +16,30 @@ class DoctorListScreen extends ConsumerStatefulWidget {
 }
 
 class _DoctorListScreenState extends ConsumerState<DoctorListScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Future.microtask(() {
+      _getDoctors();
+    });
+  }
+
+  void _getDoctors() async {
+    final user = ref.read(userProvider);
+    try {
+      ref
+          .read(doctorProvider.notifier)
+          .fetchAvailableDoctorSByPatientId(user!.patientId!);
+    } catch (e) {
+      showErrorSnackbar("An error occurred: $e", context);
+    }
+  }
+
   void createRequest(String doctorId, User user) async {
     try {
       if (user.patientId == null) {
@@ -37,6 +61,7 @@ class _DoctorListScreenState extends ConsumerState<DoctorListScreen> {
       var response = await doctorRequestService.createRequest(request);
       if (response.requestId != null) {
         showSuccessSnackbar("Successfully sent the request", context);
+        _getDoctors();
       } else {
         showErrorSnackbar("Failed to send the request", context);
       }

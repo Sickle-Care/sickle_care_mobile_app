@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sickle_cell_app/providers/doctor_provider.dart';
-import 'package:sickle_cell_app/providers/user_provider.dart';
-import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/patient_screens/blog_list_screen.dart';
 import 'package:sickle_cell_app/screens/patient_screens/daily_report_screen.dart';
 import 'package:sickle_cell_app/screens/patient_screens/doctor_list_screen.dart';
@@ -30,23 +27,18 @@ class _MoreScreenState extends ConsumerState<MoreScreen> {
     setState(() {
       userType = prefs.getString('userType');
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (userType == 'Patient') {
-        _getDoctors();
-      }
-    });
   }
 
-  void _getDoctors() async {
-    final user = ref.read(userProvider);
-    try {
-      ref
-          .read(doctorProvider.notifier)
-          .fetchAvailableDoctorSByPatientId(user!.patientId!);
-    } catch (e) {
-      showErrorSnackbar("An error occurred: $e", context);
-    }
-  }
+  // void _getDoctors() async {
+  //   final user = ref.read(userProvider);
+  //   try {
+  //     ref
+  //         .read(doctorProvider.notifier)
+  //         .fetchAvailableDoctorSByPatientId(user!.patientId!);
+  //   } catch (e) {
+  //     showErrorSnackbar("An error occurred: $e", context);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -95,18 +87,18 @@ class _MoreScreenState extends ConsumerState<MoreScreen> {
                     );
                   },
                 ),
+                ItemCard(
+                  title: "Session Chat",
+                  icon: Icons.message,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => SessionChatListScreenPatient(),
+                      ),
+                    );
+                  },
+                ),
               ],
-              ItemCard(
-                title: "Session Chat",
-                icon: Icons.message,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => SessionChatListScreenPatient(),
-                    ),
-                  );
-                },
-              ),
               ItemCard(
                 title: "Blog Corner",
                 icon: Icons.my_library_books,

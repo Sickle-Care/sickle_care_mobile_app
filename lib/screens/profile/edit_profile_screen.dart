@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -91,23 +90,23 @@ class _EditProfileState extends ConsumerState<EditProfile> {
         });
   }
 
-  String _errorMessage = "";
+  // String _errorMessage = "";
 
-  void validateEmail(String val) {
-    if (val.isEmpty) {
-      setState(() {
-        _errorMessage = "Email cannot be empty";
-      });
-    } else if (!EmailValidator.validate(val, true)) {
-      setState(() {
-        _errorMessage = "Enter a valid email";
-      });
-    } else {
-      setState(() {
-        _errorMessage = "";
-      });
-    }
-  }
+  // void validateEmail(String val) {
+  //   if (val.isEmpty) {
+  //     setState(() {
+  //       _errorMessage = "Email cannot be empty";
+  //     });
+  //   } else if (!EmailValidator.validate(val, true)) {
+  //     setState(() {
+  //       _errorMessage = "Enter a valid email";
+  //     });
+  //   } else {
+  //     setState(() {
+  //       _errorMessage = "";
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

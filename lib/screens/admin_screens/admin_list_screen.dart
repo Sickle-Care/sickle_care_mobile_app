@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sickle_cell_app/providers/admin_provider.dart';
 import 'package:sickle_cell_app/resources/async_handler.dart';
 import 'package:sickle_cell_app/models/user.dart';
-import 'package:sickle_cell_app/providers/admin_provider.dart';
 import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/admin_screens/add_user_screen.dart';
 

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
 import 'package:sickle_cell_app/screens/home_screens/home_screen_admin.dart';
-import 'package:sickle_cell_app/screens/home_screens/home_screen_doctor.dart';
-import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
 
 class TabsScreenAdmin extends ConsumerStatefulWidget {

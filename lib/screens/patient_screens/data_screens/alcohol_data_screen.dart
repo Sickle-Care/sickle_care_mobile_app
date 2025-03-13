@@ -40,7 +40,7 @@ class _AlcoholDataScreenState extends ConsumerState<AlcoholDataScreen> {
       HealthrecordService healthRecordService = HealthrecordService();
       var response = await healthRecordService.updateAlchoholIntake(
           updatedAlchoholConsumption, healthRecord.recordId);
-      if (response.recordId != null) {
+      if (response.recordId != "") {
         ref.read(healthRecordProvider.notifier).setRecord(response);
         showSuccessSnackbar(
             "Successfully updated alchohol consumption", context);

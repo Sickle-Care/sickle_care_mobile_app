@@ -39,7 +39,7 @@ class _WaterDataScreenState extends ConsumerState<WaterDataScreen> {
       HealthrecordService healthRecordService = HealthrecordService();
       var response = await healthRecordService.updateWaterIntake(
           updatedWaterIntake, healthRecord.recordId);
-      if (response.recordId != null) {
+      if (response.recordId != "") {
         ref.read(healthRecordProvider.notifier).setRecord(response);
         showSuccessSnackbar("Successfully updated water intake", context);
       } else {

@@ -81,15 +81,17 @@ class _PatientRequestListScreenState
                       children: [
                         SinglePatientRow(
                           name: request.patientName,
-                          onAccepted: () {
-                            ref
+                          onAccepted: () async {
+                            await ref
                                 .read(requestProvider.notifier)
                                 .acceptRequest(request.requestId!);
+                            _getRequests();
                           },
-                          onRejected: () {
-                            ref
+                          onRejected: () async {
+                            await ref
                                 .read(requestProvider.notifier)
                                 .declineRequest(request.requestId!);
+                            _getRequests();
                           },
                           onInfo: () {},
                         ),

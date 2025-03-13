@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sickle_cell_app/providers/healthRecord_provider.dart';
 import 'package:sickle_cell_app/providers/user_provider.dart';
-import 'package:sickle_cell_app/resources/snackbar.dart';
 import 'package:sickle_cell_app/screens/home_screens/home_screen.dart';
 import 'package:sickle_cell_app/screens/more_screen.dart';
 import 'package:sickle_cell_app/screens/profile/profile_screen.dart';
-import 'package:sickle_cell_app/services/healthrecord_service.dart';
 
 class TabsScreen extends ConsumerStatefulWidget {
   const TabsScreen({super.key});

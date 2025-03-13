@@ -120,7 +120,7 @@ class _DietDataScreenState extends ConsumerState<DietDataScreen> {
       HealthrecordService healthRecordService = HealthrecordService();
       var response = await healthRecordService.updateDiet(
           updatedDiet, healthRecord.recordId);
-      if (response.recordId != null) {
+      if (response.recordId != "") {
         ref.read(healthRecordProvider.notifier).setRecord(response);
         showSuccessSnackbar("Successfully updated diet details", context);
       } else {

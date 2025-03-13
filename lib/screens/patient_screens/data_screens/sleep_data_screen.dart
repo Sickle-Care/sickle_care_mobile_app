@@ -41,7 +41,7 @@ class _SleepDataScreenState extends ConsumerState<SleepDataScreen> {
       HealthrecordService healthRecordService = HealthrecordService();
       var response = await healthRecordService.updateSleep(
           updatedSleep, healthRecord.recordId);
-      if (response.recordId != null) {
+      if (response.recordId != "") {
         ref.read(healthRecordProvider.notifier).setRecord(response);
         showSuccessSnackbar("Successfully updated sleep", context);
       } else {
