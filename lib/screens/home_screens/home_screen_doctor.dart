@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sickle_cell_app/screens/doctor_screens/patient_request_list_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/medicine_data_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/sleep_data_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/water_data_screen.dart';
-import 'package:sickle_cell_app/screens/patient_screens/data_screens/alcohol_data_screen.dart';
 import 'package:sickle_cell_app/screens/doctor_screens/patient_list_screen.dart';
-import 'package:sickle_cell_app/screens/doctor_screens/session_list_screen.dart';
+import 'package:sickle_cell_app/screens/doctor_screens/session_chat_screens/session_chat_list_screen_doctor.dart';
+import 'package:sickle_cell_app/screens/doctor_screens/session_screens/session_list_screen.dart';
 
 class HomeScreenDoctor extends ConsumerStatefulWidget {
   const HomeScreenDoctor({super.key, required this.firstName});
@@ -19,30 +16,6 @@ class HomeScreenDoctor extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenDoctorState extends ConsumerState<HomeScreenDoctor> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _getHealthDetails();
-  // }
-
-  // void _getHealthDetails() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? userId = prefs.getString('userId');
-  //   String formattedDate =
-  //       "${_selectedDate.year}-${_selectedDate.month.toString().padLeft(2, '0')}-${_selectedDate.day.toString().padLeft(2, '0')}";
-  //   try {
-  //     HealthrecordService userService = HealthrecordService();
-  //     var response = await userService.getHealthDetails(userId!, formattedDate);
-  //     print("healthrecord details $response");
-  //     if (response != null) {
-  //       ref.read(healthRecordProvider.notifier).setRecord(response);
-  //       print("healthrecord details $response");
-  //     }
-  //   } catch (e) {
-  //     showErrorSnackbar("An error occurred: $e", context);
-  //   }
-  // }
-
   void _selectType(BuildContext context, String goalType) {
     if (goalType == 'Patients') {
       Navigator.of(context).push(
@@ -56,15 +29,13 @@ class _HomeScreenDoctorState extends ConsumerState<HomeScreenDoctor> {
         MaterialPageRoute(builder: (ctx) => SessionListScreen()),
       );
     }
-    //   if (goalType == 'Sleep') {
-    //     Navigator.of(context).push(
-    //       MaterialPageRoute(
-    //         builder: (ctx) => SleepDataScreen(
-    //           selectedDate: _selectedDate,
-    //         ),
-    //       ),
-    //     );
-    //   }
+    if (goalType == 'Chats') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) => SessionChatListScreenDoctor(),
+        ),
+      );
+    }
     if (goalType == 'Requests') {
       Navigator.of(context).push(
         MaterialPageRoute(
@@ -182,10 +153,10 @@ class _HomeScreenDoctorState extends ConsumerState<HomeScreenDoctor> {
                           },
                         ),
                         GoalItem(
-                          title: "Chat",
+                          title: "Session Chats",
                           icon: Icons.chat,
                           onTapGoal: () {
-                            // _selectType(context, "Sleep");
+                            _selectType(context, "Chats");
                           },
                         ),
                         GoalItem(
@@ -234,26 +205,29 @@ class GoalItem extends StatelessWidget {
         // padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 103, 56),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 3,
+          ),
+          color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
         margin: EdgeInsets.only(bottom: 16.0),
         child: ListTile(
           leading: Icon(
             icon,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             size: 30,
           ),
           title: Text(
             title,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             size: 24,
           ),
         ),

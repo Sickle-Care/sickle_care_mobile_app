@@ -202,26 +202,29 @@ class GoalItem extends StatelessWidget {
         // padding: EdgeInsets.fromLTRB(5, 10, 5, 10),
         padding: EdgeInsets.only(top: 15, left: 10, right: 10),
         decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 255, 103, 56),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.primary,
+            width: 3,
+          ),
+          color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(25)),
         ),
         margin: EdgeInsets.only(bottom: 16.0),
         child: ListTile(
           leading: Icon(
             icon,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             size: 30,
           ),
           title: Text(
             title,
-            style: Theme.of(context)
-                .textTheme
-                .titleLarge!
-                .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.primary,
+                fontWeight: FontWeight.bold),
           ),
           trailing: Icon(
             Icons.arrow_forward_ios,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.primary,
             size: 24,
           ),
         ),
